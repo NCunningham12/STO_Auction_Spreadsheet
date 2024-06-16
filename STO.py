@@ -2,43 +2,82 @@ from openpyxl import Workbook, load_workbook
 import numpy as np
 import pandas as pd
 
-# wb = load_workbook('PythonTest.xlsx')
-wb = Workbook()
+wb = load_workbook('STO_BOB.xlsx')
 ws = wb.active
 
 
-ws.title = "SoCal Trucks Only LLC Auction Calculations"
+ws.title = "STO LLC Auction Calculations"
 
-print("Workbook Updated")
+truckCategories = [["Auction Price", "Province", "Canadian Price (CAD)", "US Price (USD)", "Book (USD)", "Total US (USD)", "BOB"]]
 
-truckData = [["Auction Price", "Province", "Canadian Price (CAD)", "US Price (USD)", "Book (USD)", "Total US (USD)", "BOB"]]
+# for row in truckCategories:
+#   ws.append(row)
 
-for row in truckData:
-  ws.append(row)
+# INPUTS: Auction Price, Province, US Price, Book
+# OUTPUTS: Canadian Price, Total US, BOB
 
 def BOB():
-  original_price = ws['E2'].value
-  flip_price = original_price
-  bb_value = ws['G2'].value
+  auction_price = ws['A2'].value
+  province = ws['B2'].value
+  # us_price = ws['E2'].value
+  book = ws['C2'].value
+  bob = ws['G2'].value
+  exchange = ws['I2'].value
 
-  if ws['C2'].value >= 2020:
-   flip_price += 2000
-  
-  if ws['D2'].value <= 50000:
-    flip_price += 5000
+  print("Province: " + province)
 
-  if ws['F2'].value == 3:
-    flip_price += 20000
-  elif ws['F2'].value == 2:
-    flip_price += 10000
+  if province.lower() == 'alberta' or province.lower() == 'bc':
+    print("WEST:")
+    auction_price += 1000
+    auction_price *= 1.05
+    canadian_price = auction_price
+    ws['D2'] = canadian_price
+    print("Canadian Price: " + str(canadian_price))
 
-  prof_marg = flip_price - bb_value
-  ws['I2'] = prof_marg
+    us_price = round(canadian_price * exchange)
+    ws['E2'] = us_price
+    print("US Price: " + str(us_price))
 
-  prof_perc = (prof_marg / original_price) * 100
+    us_price += 2300
+    us_price *= 1.01
+    total_us_price = round(us_price, 2)
+    ws['F2'] = total_us_price
+    print("Total US Price: " + str(total_us_price))
+  elif province.lower() == 'ontario':
+    print('EAST:')
+    auction_price += 1000
+    auction_price *= 1.13
+    canadian_price = auction_price
+    ws['D2'] = canadian_price
+    print("Canadian Price: " + str(canadian_price))
 
-  ws['J2'] = prof_perc
+    us_price = round(canadian_price * exchange)
+    ws['E2'] = us_price
+    print("US Price: " + str(us_price))
 
-  ws['H2'] = flip_price
+    us_price += 3400
+    us_price *= 1.01
+    total_us_price = round(us_price, 2)
+    ws['F2'] = total_us_price
+    print("Total US Price: " + str(total_us_price))
+
+  bob = round(total_us_price - book, 2)
+  ws['G2'] = bob
+  print("BOB: " + str(bob))
+
+BOB()
+
+print("✅ WORKBOOK UPDATED")
+
+# how to iterate by col-name
+ColNames = {}
+Current  = 0
+for COL in ws.iter_cols(1, ws.max_column):
+    ColNames[COL[0].value] = Current
+    Current += 1
+
+ ## Now you can access by column name
+for row_cells in ws.iter_rows(min_row=1, max_row=4):
+    print(row_cells[ColNames['Province']].value) 
 
 wb.save('STO_BOB.xlsx')
