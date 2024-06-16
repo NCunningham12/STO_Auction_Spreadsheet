@@ -4,9 +4,6 @@ from openpyxl.styles import Alignment
 wb = load_workbook('STO_BOB.xlsx')
 ws = wb.active
 
-currentCell = ws.cell('A1') #or currentCell = ws['A1']
-currentCell.alignment = Alignment(horizontal='center')
-
 ws.title = "STO LLC Auction Calculations"
 
 truckCategories = [["ID", "Auction Price", "Province", "Canadian Price (CAD)", "US Price (USD)", "Book (USD)", "Total US (USD)", "BOB"]]
