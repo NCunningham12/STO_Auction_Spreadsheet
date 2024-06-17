@@ -14,10 +14,9 @@ truckCategories = [["ID", "Auction Price", "Province", "Canadian Price (CAD)", "
 # OUTPUTS: ID, Canadian Price, Total US, BOB
 
 def BOB(): 
-  maxRow = ws.max_row + 1
   id = 0
-
-  for row in range(2, maxRow):
+  
+  for row in range(2, ws.max_row + 1):
     id += 1
     ws['A' + str(row)].value = id                                     # Creates a unique ID number for each vehicle for reference only
 
