@@ -1,5 +1,16 @@
 from openpyxl import Workbook, load_workbook
+from bs4 import BeautifulSoup
+import html.parser
+import requests
 
+# Scrape current Exchange rate (In Development)
+# exchange_page = requests.get("https://www.google.com/finance/quote/CAD-USD?hl=en")
+# soup = BeautifulSoup(exchange_page.text, "html.parser")
+# rate = soup.find("div", attrs={"class":"YM1Kec fxKbKc"})
+
+# print(rate)
+
+# Populate the Workbook
 wb = load_workbook('STO_BOB.xlsx')
 ws = wb.active
 
@@ -39,8 +50,8 @@ def BOB():
       us_price = round(canadian_price * exchange, 2)                  # Converts the CAD to USD based on the input "Exchange rate"
       ws['G' + str(row)] = round(us_price, 2)
 
-      us_price += 2300                                                
-      us_price *= 1.01                                                # Adds 2300 and then adds 1% of the new total
+      us_price += 2000                                                
+      us_price *= 1.01                                                # Adds 2000 and then adds 1% of the new total
       total_us_price = round(us_price, 2)  
       ws['H' + str(row)] = total_us_price                       
     elif province.lower() == 'ont':                                   # Checks if province is EAST
@@ -49,11 +60,11 @@ def BOB():
       canadian_price = round(auction_price, 2)                        
       ws['F' + str(row)] = round(canadian_price, 2)
 
-      us_price = round(canadian_price * exchange)                     # Converts the CAD to USD based on the input "Exchange Rate"
+      us_price = round(canadian_price * exchange, 2)                     # Converts the CAD to USD based on the input "Exchange Rate"
       ws['G' + str(row)] = round(us_price, 2)
 
-      us_price += 3400                                                
-      us_price *= 1.01                                                # Adds 3400 and then adds 1% of the new total
+      us_price += 1400                                                
+      us_price *= 1.01                                                # Adds 1400 and then adds 1% of the new total
       total_us_price = round(us_price, 2)
       ws['H' + str(row)] = total_us_price
 
