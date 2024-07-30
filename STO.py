@@ -33,12 +33,11 @@ def BOB():
 
     auction_price = ws['B' + str(row)].value
     province = ws['C' + str(row)].value
-    us_price = ws['G' + str(row)].value
-    book_cad = ws['D' + str(row)].value
+    book_usd = ws['D' + str(row)].value
     exchange = ws['K2'].value
 
-    book_usd = book_cad * exchange
-    ws['E' + str(row)].value = book_usd
+    book_cad = (2 - exchange) * book_usd
+    ws['E' + str(row)].value = round(book_cad, 2)
 
 
     if province.lower() == 'alb' or province.lower() == 'bc':         # Checks if province is WEST
